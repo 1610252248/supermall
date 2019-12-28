@@ -1,0 +1,26 @@
+<template>
+  <div class="goods-content">
+    <div class="goods-list">
+      <goods-list-item class="goods-item" v-for="(item, index) in goods.list" :goods="item" :index="index"/>
+    </div>
+  </div>
+</template>
+
+<script>
+  import GoodsListItem from "./goodsListItem";
+  export default {
+    name: "goodsList",
+    components: {GoodsListItem},
+    props: ['goods']
+  }
+</script>
+<style scoped>
+  .goods-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+  .goods-content {
+    margin-bottom: 70px;
+  }
+</style>
