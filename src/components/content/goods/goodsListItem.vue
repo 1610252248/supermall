@@ -22,8 +22,7 @@
   .goods-item {
     padding-bottom: 40px;
     position: relative;
-
-    width: 42%;
+    width: 48%;
   }
 
   .goods-item img {

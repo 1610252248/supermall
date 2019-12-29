@@ -8,24 +8,26 @@
       <tab-control :titles="['流行','新款','精选']" @tabClick="getCategory"></tab-control>
       <goods-list :goods="goods[curCategory]"></goods-list>
     </bt-scroll>
+<!--    <back-top></back-top>-->
   </div>
 </template>
 
 <script>
   import {getHomeMultidata, getHomeGoods} from "network/home";
 
-  import NavBar from "components/common/navBar/navBar";
   import homeSwiper from "./childCp/homeSwiper";
-  import TabControl from "components/common/tabControl/tabControl";
   import HomeRecommend from "./childCp/homeRecommend";
   import HomeFeature from "./childCp/homeFeature";
-  import GoodsList from "components/common/goods/goodsList";
   import BScroll from "better-scroll";
+  import NavBar from "@/components/common/navBar/navBar";
   import BtScroll from "@/components/common/btScroll/btScroll";
+  import BackTop from "@/components/content/backTop/backTop";
+  import GoodsList from "@/components/content/goods/goodsList";
+  import TabControl from "@/components/content/tabControl/tabControl";
 
   export default {
     name: "Home",
-    components: {BtScroll, TabControl, GoodsList, HomeFeature, HomeRecommend, NavBar,homeSwiper},
+    components: {TabControl, GoodsList, BackTop, BtScroll,  HomeFeature, HomeRecommend, NavBar,homeSwiper},
     data() {
       return {
         data: '',
