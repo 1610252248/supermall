@@ -1,6 +1,6 @@
 <template>
-  <div class="bt-scroll" ref="scroll">
-    <div class="content-scroll">
+  <div ref="wrapper1">
+    <div>
       <slot></slot>
     </div>
   </div>
@@ -15,27 +15,36 @@
     },
     methods: {
       init() {
-        this.bs = new BScroll(this.$refs.scroll, {
+        this.bs = new BScroll(this.$refs.wrapper1, {
           click: true,
-          probeType: 3,
           scrollY: true,
           pullDownRefresh: true,
           pullUpLoad: true
         })
         this.bs.on('pullingDown', () => {
-          console.log('上拉加载中');
+          console.log('下拉加载中');
           setTimeout(()=>{
             this.bs.finishPullDown();
           }, 600)
         })
         this.bs.on('pullingUp', () => {
-          console.log('下拉加载中');
-          setTimeout(()=>{
-            this.bs.finishPullUp();
-          }, 1600)
+          this.$emit('loadMore');
         })
+        this.bs.on('scroll', position => {
+          this.$emit('scroll', position);
+        })
+      },
+      scrollTo(x = 0, y = 0, time = 500) {
+        this.bs.scrollTo(x, y, time);
+      },
+      finishPullUp() {
+        this.bs.finishPullUp();
+      },
+      refresh() {
+        this.bs.refresh();
       }
     }
+
   }
 </script>
 

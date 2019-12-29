@@ -1,7 +1,7 @@
 <template>
   <div class="goods-item" :key="index">
     <div >
-      <img :src="goods.show.img" alt="">
+      <img :src="goods.show.img" alt="" @load="loadImage">
       <div class="goods-info">
         <p>{{goods.title}}</p>
         <span class="price">{{goods.price}}</span>
@@ -14,7 +14,12 @@
 <script>
   export default {
     name: "goodsListItem",
-    props: ['goods', 'index']
+    props: ['goods', 'index'],
+    methods: {
+      loadImage() {
+        this.$bus.$emit('loadImage');
+      }
+    }
   }
 </script>
 
@@ -27,7 +32,9 @@
 
   .goods-item img {
     width: 100%;
+    /*height: 100%;*/
     border-radius: 5px;
+
   }
 
   .goods-info {

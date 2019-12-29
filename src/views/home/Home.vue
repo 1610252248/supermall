@@ -1,14 +1,14 @@
 <template>
-  <div id="home" ref="scroll">
+  <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <bt-scroll class="bt-scroll">
+    <bt-scroll class="bt-scroll"  ref="scroll" @scroll="showBack" @loadMore="loadMore">
       <home-swiper :banners="banners"></home-swiper>
       <home-recommend :recommend="recommend"></home-recommend>
       <home-feature></home-feature>
       <tab-control :titles="['流行','新款','精选']" @tabClick="getCategory"></tab-control>
       <goods-list :goods="goods[curCategory]"></goods-list>
     </bt-scroll>
-<!--    <back-top></back-top>-->
+    <back-top @click.native="backTopClick" v-show="isShowBack"></back-top>
   </div>
 </template>
 
@@ -30,7 +30,6 @@
     components: {TabControl, GoodsList, BackTop, BtScroll,  HomeFeature, HomeRecommend, NavBar,homeSwiper},
     data() {
       return {
-        data: '',
         banners: '',
         recommend: '',
         goods: {
@@ -40,25 +39,21 @@
         },
         categories: ['pop', 'new', 'sell'],
         curCategory: 'pop',
+        isShowBack: false
       }
     },
     mounted() {
       this.getHomeMultidata();
       this.getHomeGoods(this.curCategory);
-      // this.init();
+      let refresh = this.debounce(this.scrollRefresh, 20);
+      this.$bus.$on('loadImage', () => {
+        refresh();
+      });
     },
     methods: {
-      init() {
-        this.bs = new BScroll(this.$refs.scroll, {
-          scrollY: true,
-          click: true,
-          probeType: 3 // listening scroll hook
-        })
-      },
       getHomeMultidata() {
         getHomeMultidata()
           .then(res => {
-            this.data = res;
             this.banners = res.data.data.banner.list;
             this.recommend = res.data.data.recommend.list;
           })
@@ -73,6 +68,29 @@
       getCategory(index) {
         this.curCategory = this.categories[index]
         this.getHomeGoods(this.curCategory);
+      },
+      backTopClick() {
+        this.$refs.scroll.scrollTo();
+      },
+      showBack(position) {
+        this.isShowBack = (-position.y) > 600;
+      },
+      loadMore() {
+        console.log('上拉加载更多');
+        this.getHomeGoods(this.curCategory);
+        setTimeout(this.$refs.scroll.finishPullUp(), 600);
+      },
+      debounce(func, delay) {
+        let timer = null;
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            func.apply(this, args)
+          }, delay)
+        }
+      },
+      scrollRefresh() {
+        this.$refs.scroll.refresh();
       }
     }
   }
@@ -81,7 +99,6 @@
 <style scoped>
   #home {
     padding-top: 43px;
-    position: relative;
     height: 100vh;
   }
   .home-nav {
@@ -94,11 +111,7 @@
     z-index: 9;
   }
   .bt-scroll {
-    position: absolute ;
-    top: 43px;
-    bottom: 49px;
-    left: 0px;
-    right: 0px;
+    height: calc(100% - 49px);
     overflow: hidden;
   }
 </style>
