@@ -16,6 +16,7 @@
     right: 10px;
     bottom: 50px;
   }
+
   .back-top img {
     width: 43px;
     height: 43px;

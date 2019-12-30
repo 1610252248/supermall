@@ -23,11 +23,13 @@
     padding: 10px 0 20px 0;
     border-bottom: 10px solid #eee;
   }
+
   .recommend-item {
     flex: 1;
     width: 100%;
     font-size: 14px;
   }
+
   .recommend-item img {
     width: 85px;
     height: 85px;

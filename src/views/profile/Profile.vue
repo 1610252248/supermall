@@ -113,6 +113,7 @@
   // import BScroll from 'better-scroll'
 
   import BtScroll from "@/components/common/btScroll/btScroll";
+
   export default {
     name: "Profile",
     components: {BtScroll},

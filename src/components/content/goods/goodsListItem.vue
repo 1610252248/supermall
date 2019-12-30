@@ -1,12 +1,10 @@
 <template>
-  <div class="goods-item" :key="index">
-    <div >
-      <img :src="goods.show.img" alt="" @load="loadImage">
-      <div class="goods-info">
-        <p>{{goods.title}}</p>
-        <span class="price">{{goods.price}}</span>
-        <span class="collect">{{goods.cfav}}</span>
-      </div>
+  <div class="goods-item"  @click="jumpDetail(goods.iid)">
+    <img :src="goods.show.img" alt="" @load="loadImage">
+    <div class="goods-info">
+      <p>{{goods.title}}</p>
+      <span class="price">{{goods.price}}</span>
+      <span class="collect">{{goods.cfav}}</span>
     </div>
   </div>
 </template>
@@ -14,10 +12,19 @@
 <script>
   export default {
     name: "goodsListItem",
-    props: ['goods', 'index'],
+    props: ['goods'],
     methods: {
       loadImage() {
         this.$bus.$emit('loadImage');
+      },
+      jumpDetail(iid) {
+        // console.log('------');
+        this.$router.push({
+          path: '/detail',
+          query: {
+            iid: iid
+          }
+        });
       }
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="tab-control">
     <div v-for="(item, index) in titles" class="tab-control-item" @click="Click(index)">
-      <span :class="{active: index == cur_index}">{{item}}</span>
+      <span :class="{'active': index == currentIndex}">{{item}}</span>
     </div>
   </div>
 </template>
@@ -12,12 +12,12 @@
     props:['titles'],
     data() {
       return {
-        cur_index: 0
+        currentIndex: 0
       }
     },
     methods: {
       Click(index) {
-        this.cur_index = index;
+        this.currentIndex = index;
         this.$emit('tabClick', index);
       }
     }
@@ -28,10 +28,7 @@
   .tab-control {
     display: flex;
     text-align: center;
-    position: sticky;
-    top: 44px;
     background-color: var(--color-background);
-    z-index: 9;
   }
   .tab-control-item {
     flex: 1;

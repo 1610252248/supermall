@@ -8,8 +8,15 @@
 
 <script>
   import BScroll from 'better-scroll'
+
   export default {
     name: "btScroll",
+    data() {
+      return {
+        bs: null,
+        isShowLoad: false
+      }
+    },
     mounted() {
       this.init();
     },
@@ -23,8 +30,10 @@
         })
         this.bs.on('pullingDown', () => {
           console.log('下拉加载中');
-          setTimeout(()=>{
+          this.isShowLoad = true;
+          setTimeout(() => {
             this.bs.finishPullDown();
+            this.isShowLoad = false;
           }, 600)
         })
         this.bs.on('pullingUp', () => {
