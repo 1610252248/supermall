@@ -14,7 +14,7 @@
     },
     methods: {
       itemClick() {
-        this.$router.replace(this.path);
+        this.$router.replace(this.path).catch(err => {err});
       }
     },
     computed: {

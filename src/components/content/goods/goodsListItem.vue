@@ -1,6 +1,6 @@
 <template>
-  <div class="goods-item"  @click="jumpDetail(goods.iid)">
-    <img :src="goods.show.img" alt="" @load="loadImage">
+  <div class="goods-item" v-if="Object.keys(goods).length" @click="jumpDetail(showGoodsId)">
+    <img v-lazy="showImage" alt="" @load="loadImage">
     <div class="goods-info">
       <p>{{goods.title}}</p>
       <span class="price">{{goods.price}}</span>
@@ -13,18 +13,27 @@
   export default {
     name: "goodsListItem",
     props: ['goods'],
+    computed: {
+      showImage() {
+        return this.goods.image || this.goods.show.img;
+      },
+      showGoodsId() {
+        return this.goods.iid || this.goods.shop_id;
+      }
+    },
+    inject: ['reload'],
     methods: {
       loadImage() {
         this.$bus.$emit('loadImage');
       },
       jumpDetail(iid) {
-        // console.log('------');
+        this.reload();
         this.$router.push({
           path: '/detail',
           query: {
             iid: iid
           }
-        });
+        }).catch(err => err);
       }
     }
   }
@@ -39,7 +48,6 @@
 
   .goods-item img {
     width: 100%;
-    /*height: 100%;*/
     border-radius: 5px;
 
   }
@@ -77,6 +85,6 @@
     top: -1px;
     width: 14px;
     height: 14px;
-    background: url("~assets/img/common/collect.svg") 0 0/14px 14px;
+    background: url("~@/assets/img/common/collect.svg") 0 0/14px 14px;
   }
 </style>

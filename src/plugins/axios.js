@@ -10,8 +10,8 @@ import axios from "axios";
 
 let config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
-  // baseURL: 'http://123.207.32.32:8000/api/w1'
-  // baseURL: 'http://106.54.54.237:8000/api/w1'
+  // baseURL: 'http://106.54.54.237:8000/api/hy'
+  baseURL: 'http://123.207.32.32:8000/api/hy/'
   // timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
 };

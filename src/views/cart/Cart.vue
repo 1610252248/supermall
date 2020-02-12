@@ -1,26 +1,35 @@
 <template>
-    <swiper>
-      <swiper-slide>Slide 1213123123123Slide 1213123123123Slide 1213123123123</swiper-slide>
-      <swiper-slide>Slide 1213123123123Slide 1213123123123Slide 1213123123123</swiper-slide>
-      <swiper-slide>Slide 1213123123123Slide 1213123123123Slide 1213123123123</swiper-slide>
-      <swiper-slide>Slide 1213123123123Slide 1213123123123Slide 1213123123123</swiper-slide>
-      <swiper-slide>Slide 1213123123123Slide 1213123123123Slide 1213123123123</swiper-slide>
-      <swiper-slide>Slide 1213123123123Slide 1213123123123Slide 1213123123123</swiper-slide>
-      <swiper-slide>Slide 1213123123123Slide 1213123123123Slide 1213123123123</swiper-slide>
+  <div id="cart">
+    <nav-bar class="nav-bar">
+      <div slot="center">购物车({{cartLength}})</div>
+    </nav-bar>
+    <cart-list/>
 
-    </swiper>
+    <cart-bottom-nav/>
+  </div>
 </template>
 
 <script>
-  import 'swiper/dist/css/swiper.css'
+  import NavBar from "@/components/common/navBar/navBar";
+  import {mapGetters} from 'vuex';
+  import CartList from "@/views/cart/childCp/CartList";
+  import CartBottomNav from "@/views/cart/childCp/cartBottomNav";
 
-  import { swiper, swiperSlide } from 'vue-awesome-swiper'
   export default {
     name: "Cart",
-    components: {swiper, swiperSlide}
+    components: {CartBottomNav, CartList, NavBar},
+    computed: {
+      ...mapGetters(['cartLength'])
+    }
   }
 </script>
 
 <style scoped>
-
+  #cart {
+    height: 100vh;
+  }
+  .nav-bar {
+    background: var(--color-tint);
+    color: #fff;
+  }
 </style>

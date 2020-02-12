@@ -1,13 +1,13 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"> <div slot="center">购物街</div> </nav-bar>
-    <tab-control v-show="isShowTabControl" ref="tabControl1" :titles="['流行','新款','精选']" @tabClick="getCategory"/>
+    <tab-control class="up-tab-control" v-show="isShowTabControl" ref="tabControl1" :titles="['流行','新款','精选']" @tabClick="getCategory"/>
 
     <bt-scroll class="bt-scroll" ref="scroll" @scroll="getPosition" @loadMore="loadMore">
       <home-swiper :banners="banners" @loadSwiperImage="loadSwiperImage"/>
       <home-recommend :recommend="recommend"/>
       <home-feature/>
-      <tab-control v-show="!isShowTabControl" ref="tabControl2" :titles="['流行','新款','精选']" @tabClick="getCategory"/>
+      <tab-control  ref="tabControl2" :titles="['流行','新款','精选']" @tabClick="getCategory"/>
       <goods-list :goods="goods[curCategory].list"/>
     </bt-scroll>
     <back-top @click.native="backTopClick" v-show="isShowBack"/>
@@ -15,8 +15,8 @@
 </template>
 
 <script>
-  import {getHomeGoods, getHomeMultidata} from "network/home";
-  import {debounce} from "@/common/utils";
+  import {getHomeGoods, getHomeMultidata} from "@/network/home";
+  import {itemListenerMixin, backTopMixin} from "@/common/mixin"
 
   import homeSwiper from "./childCp/homeSwiper";
   import HomeRecommend from "./childCp/homeRecommend";
@@ -41,37 +41,28 @@
         },
         categories: ['pop', 'new', 'sell'],
         curCategory: 'pop',
-        isShowBack: false,
         tabOffsetTop: 0,
         isShowTabControl: false,
+        saveY: 0
       }
     },
+    mixins: [itemListenerMixin, backTopMixin],
     created() {
-      console.log('created');
       this.getHomeMultidata();
-
       this.getHomeGoods('pop');
       this.getHomeGoods('new');
       this.getHomeGoods('sell');
     },
-    mounted() {
-      let refresh = debounce(this.scrollRefresh, 20);
-      this.$bus.$on('loadImage', () => {
-        refresh();
-      });
-    },
     methods: {
       getHomeMultidata() {
-        getHomeMultidata()
-          .then(res => {
+        getHomeMultidata().then(res => {
             this.banners = res.data.data.banner.list;
             this.recommend = res.data.data.recommend.list;
           })
       },
       getHomeGoods(type) {
         let page = ++this.goods[type].page;
-        getHomeGoods(type, page)
-          .then(res => {
+        getHomeGoods(type, page).then(res => {
             this.goods[type].list.push(...res.data.data.list);
           })
       },
@@ -79,34 +70,29 @@
         this.curCategory = this.categories[index];
         this.$refs.tabControl1.currentIndex = this.$refs.tabControl2.currentIndex = index;
       },
-      backTopClick() {
-        this.$refs.scroll.scrollTo();
-      },
       getPosition(position) {
         this.isShowBack = (-position.y) > 600;
         this.isShowTabControl = (-position.y) > this.tabOffsetTop;
       },
       loadMore() {
+        console.log('-----');
         this.getHomeGoods(this.curCategory);
         setTimeout(() => {
           this.$refs.scroll.finishPullUp();
           console.log('上拉加载更多');
         }, 600);
       },
-      scrollRefresh() {
-        this.$refs.scroll.refresh();
-      },
       loadSwiperImage() {
         this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
       }
     },
-    activated() {
-      console.log('activated');
+    activated(){
+      this.$refs.scroll.scrollTo(0, this.saveY, 0);
+      this.$refs.scroll.refresh();
     },
-    deactivated() {
-      console.log('deactivated');
-    }
-
+    deactivated(){
+      this.saveY = this.$refs.scroll.getScrollY();
+    },
   }
 </script>
 
@@ -120,7 +106,13 @@
     background-color: var(--color-tint);
     color: var(--color-background);
   }
-
+  .up-tab-control{
+    position: fixed;
+    top: 43px;
+    left: 0;
+    right: 0;
+    z-index: 9;
+  }
   .bt-scroll {
     height: calc(100% - 93px);
     overflow: hidden;

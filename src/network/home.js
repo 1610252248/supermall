@@ -1,9 +1,9 @@
 export function getHomeMultidata() {
-  return axios.get('/api/home/multidata');
+  return axios.get('/home/multidata');
 }
 
 export function getHomeGoods(type, page) {
-  return axios.get('/api/home/data', {
+  return axios.get('/home/data', {
     params: {type, page}
   })
 }
